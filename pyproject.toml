@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smoder"
+version = "0.1.0"
+description = "SMODER: spatial multi-omics deconvolution toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "Shucun Xiong" }
+]
+dependencies = [
+  "numpy",
+  "pandas",
+  "scipy",
+  "matplotlib",
+  "scikit-learn",
+  "anndata",
+  "scanpy",
+  "torch",
+  "torch-geometric",
+  "louvain"
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["smoder*"]
