@@ -1,6 +1,17 @@
 Installation
 ============
 
+Requirements
+------------
+
+The current validated environment is:
+
+- Linux
+- conda-based Python environment
+- Python 3.12
+
+A dedicated environment is recommended.
+
 Clone the repository
 --------------------
 
@@ -11,8 +22,6 @@ Clone the repository
 
 Create a Python environment
 ---------------------------
-
-A dedicated Python environment is recommended.
 
 For example:
 
@@ -36,3 +45,10 @@ Current recommended execution method
 .. code-block:: bash
 
    python -m smoder.pipelines.mousebrain_h3k27ac
+
+Data preparation
+----------------
+
+SMODER does not currently ship large example datasets directly inside the repository.
+
+Please prepare the required input datasets separately and organize them according to the expected structure described in the :doc:`data` page.

@@ -1,17 +1,16 @@
 # SMODER
 
-**SMODER** is a spatial multi-omics deconvolution toolkit under active development.
+**SMODER** is a Python toolkit for spatial multi-omics deconvolution.
 
-SMODER is designed to support spatial multi-omics deconvolution workflows in a modular and reusable Python package structure. The project is currently being refactored from research scripts into a cleaner package-based implementation, with runnable pipelines, reusable preprocessing modules, and extensible model components.
+It is designed to integrate spatial transcriptomics with an additional spatial modality, such as protein or chromatin accessibility signals, in order to infer cell-type composition across spatial locations.
 
-At the current stage, the package has been validated on a mouse brain RNA + peak dataset, and the end-to-end workflow can successfully complete:
+The current implementation provides a modular workflow for:
 
-- data loading
-- preprocessing
+- data preprocessing
 - feature engineering
 - graph construction
 - model training
-- result saving
+- deconvolution result generation
 
 ---
 
@@ -114,7 +113,9 @@ conda activate smoder
 pip install -e .
 ```
 
-This installs SMODER in editable mode so that package imports always reflect the latest source code during development.
+This installs SMODER in editable mode so that package imports always reflect the latest source code during development. 
+
+>The current validated environment is Linux + conda. The main tutorial and recommended workflow are currently oriented toward this environment.
 
 ---
 
@@ -140,6 +141,29 @@ The current validated example uses:
 - single-cell reference RNA
 - spatial RNA
 - spatial peak data
+
+---
+## Data
+
+SMODER does not currently store large research datasets directly in the GitHub repository.
+
+The validated mouse brain example expects the following input structure:
+
+```text
+data/
+└── mousebrain_H3K27ac/
+   ├── sc_mousebrain_processed.h5ad
+   ├── RNA.h5ad
+   └── peak.h5ad
+```
+
+Required files:
+
+- `sc_mousebrain_processed.h5ad`: single-cell reference RNA
+- `RNA.h5ad`: spatial RNA
+- `peak.h5ad`: spatial peak data
+
+Large datasets should be prepared separately and placed into a local data directory matching the expected structure. Additional details are provided in the documentation site and in `data/README.md`.
 
 ---
 
