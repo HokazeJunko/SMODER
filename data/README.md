@@ -1,10 +1,16 @@
 # Data
 
-This repository does not store large research datasets directly in GitHub.
+The current validated example workflow uses a mouse brain RNA + peak dataset.
 
-## Expected input structure
+## Required input files
 
-A typical dataset layout is:
+The current example expects three input files:
+
+- `sc_mousebrain_processed.h5ad`: single-cell reference RNA
+- `RNA.h5ad`: spatial RNA
+- `peak.h5ad`: spatial peak data
+
+## Example directory layout
 
 ```text
 data/
@@ -14,16 +20,14 @@ data/
    └── peak.h5ad
 ```
 
-## Required files
+## How to obtain the data
 
-The current validated mouse brain example uses:
+The validated example dataset is not currently distributed through a public download link.
 
-- `sc_mousebrain_processed.h5ad`: single-cell reference RNA
-- `RNA.h5ad`: spatial RNA
-- `peak.h5ad`: spatial peak data
+Please contact the maintainer to obtain the example files.
 
 ## Notes
 
-- Large datasets are not committed directly to the repository.
-- Users should download or prepare the required files separately.
-- The documentation site provides additional information on expected data organization.
+After obtaining the required files, place them into a local data directory matching the expected structure.
+
+The file paths can then be configured in the pipeline configuration.

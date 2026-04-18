@@ -24,10 +24,17 @@ A typical dataset layout is:
    ├── RNA.h5ad
    └── peak.h5ad
 
+How to obtain the data
+----------------------
+
+The example dataset is not currently distributed through a public download link.
+
+To obtain the validated example files, please contact the maintainer.
+
 How to prepare data
 -------------------
 
-Please prepare the required dataset files separately and place them into a local data directory matching the expected structure.
+After obtaining the required files, place them into a local data directory matching the expected structure.
 
 The file paths can then be configured in the pipeline configuration.
 
@@ -49,4 +56,4 @@ Notes
 
 - The current validated workflow uses single-cell reference RNA, spatial RNA, and a second spatial modality.
 - The main tutorial currently follows the validated mouse brain example.
-- Future releases may provide additional dataset links, mirrors, or download scripts.
+- Public dataset download links or automated download scripts may be added in future releases.

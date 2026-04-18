@@ -71,11 +71,18 @@ The current validated environment is:
 
 The main tutorial and recommended workflow are currently oriented toward this environment.
 
-### Clone the repository
+### Install from PyPI
 
 ```bash
-git clone <repository_url>
+pip install smoder
+```
+
+### Install from GitHub
+
+```bash
+git clone https://github.com/HokazeJunko/SMODER.git
 cd SMODER
+pip install -e .
 ```
 
 ### Create a Python environment
@@ -87,12 +94,6 @@ For example:
 ```bash
 conda create -n smoder python=3.12
 conda activate smoder
-```
-
-### Install the package
-
-```bash
-pip install -e .
 ```
 
 ## Data
@@ -115,7 +116,11 @@ data/
    └── peak.h5ad
 ```
 
-Please prepare the required dataset files separately and place them into a local data directory matching the expected structure.
+### How to obtain the data
+
+The validated example dataset is not currently distributed through a public download link.
+
+Please contact the maintainer to obtain the example files.
 
 Additional notes on data preparation are provided in `data/README.md` and in the documentation site.
 
@@ -151,7 +156,6 @@ Planned next steps include:
 - additional runnable pipelines for other datasets
 - improved package interfaces
 - more complete dataset instructions
-- formal PyPI release
 - continued documentation improvements
 
 ## Citation

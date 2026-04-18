@@ -24,3 +24,5 @@ outputs/
 # Optional local env files
 .env
 .venv/
+dist/
+build/

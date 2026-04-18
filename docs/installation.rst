@@ -12,13 +12,25 @@ The current validated environment is:
 
 The main tutorial and recommended workflow are currently oriented toward this environment.
 
-Clone the repository
---------------------
+Install from PyPI
+-----------------
+
+The recommended way to install SMODER is:
 
 .. code-block:: bash
 
-   git clone <repository_url>
+   pip install smoder
+
+Install from GitHub
+-------------------
+
+To install the latest development version from source:
+
+.. code-block:: bash
+
+   git clone https://github.com/HokazeJunko/SMODER.git
    cd SMODER
+   pip install -e .
 
 Create a Python environment
 ---------------------------
@@ -29,15 +41,6 @@ For example:
 
    conda create -n smoder python=3.12
    conda activate smoder
-
-Install the package
--------------------
-
-Install SMODER in editable mode:
-
-.. code-block:: bash
-
-   pip install -e .
 
 Current recommended execution method
 ------------------------------------
