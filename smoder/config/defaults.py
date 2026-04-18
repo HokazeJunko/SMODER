@@ -34,14 +34,14 @@ def get_mousebrain_h3k27ac_params():
         "obsm_name_modal2": "X_feat_modal2",
         "method": 2,
         "embd_dim": 50,
-        "epochs": 10,
+        "epochs": 10000,
         "learning_rate": 2e-3,
         "hidden_dim": 512,
         "weight_loss": [1, 0.001],
         "weight_consistency": 1,
         "weight_spatial": 1e-5,
         "seed": 1,
-        "model_save": False,
+        "model_save": True,
         "device": "cuda:0",
     }
     return params
