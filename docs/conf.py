@@ -4,6 +4,20 @@ import sys
 # Make project package importable by Sphinx
 sys.path.insert(0, os.path.abspath(".."))
 
+autodoc_mock_imports = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "matplotlib",
+    "sklearn",
+    "scanpy",
+    "anndata",
+    "torch",
+    "torch_geometric",
+    "louvain",
+    "harmonypy",
+]
+
 project = "SMODER"
 author = "Shucun Xiong"
 copyright = "2026, Shucun Xiong"
