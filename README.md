@@ -12,7 +12,7 @@ The current implementation provides a modular workflow for:
 - model training
 - deconvolution result generation
 
----
+The package is organized around reusable components for preprocessing, modeling, configuration, and end-to-end pipeline execution.
 
 ## Highlights
 
@@ -20,32 +20,25 @@ The current implementation provides a modular workflow for:
 - End-to-end runnable spatial multi-omics pipeline
 - Support for RNA + second-modality workflows
 - Reusable preprocessing, model, and pipeline components
-- Editable installation for active development
-- Planned support for tutorials and documentation website deployment
-
----
+- Tutorial notebook and documentation website support
 
 ## Project Status
 
-SMODER is currently in an active refactoring stage.
+What is currently available:
 
-### What is already working
-
-- the `smoder` package can be imported successfully
+- the `smoder` package can be installed and imported
 - the current mouse brain H3K27ac pipeline can run end-to-end
-- the package can be installed in editable mode
+- tutorial and API documentation are available through Read the Docs
 - output files can be generated successfully, including:
   - `cell_type_proportions.csv`
   - `spatial_decon_result.h5ad`
   - `training_log.txt`
 
-### Current recommended execution method
+Current recommended execution method:
 
 ```bash
 python -m smoder.pipelines.mousebrain_h3k27ac
 ```
-
----
 
 ## Repository Structure
 
@@ -57,97 +50,62 @@ SMODER/
 │   ├── models/
 │   ├── pipelines/
 │   └── preprocessing/
+├── data/
+├── docs/
 ├── scripts/
 ├── tutorials/
-├── docs/
-├── outputs/
 ├── pyproject.toml
+├── requirements.txt
 └── README.md
 ```
 
-### Main package components
-
-- `smoder/models/gnn.py`  
-  Neural network building blocks, including GCN encoders and attention-based fusion modules.
-
-- `smoder/models/deconvolution.py`  
-  Main deconvolution model implementation, including `SpaMultiDecon_two_modals`.
-
-- `smoder/preprocessing/rna.py`  
-  RNA preprocessing utilities for single-cell and spatial transcriptomics data.
-
-- `smoder/preprocessing/modality2.py`  
-  Preprocessing utilities for the second modality, including ADT CLR normalization and peak TF-IDF processing.
-
-- `smoder/pipelines/mousebrain_h3k27ac.py`  
-  End-to-end pipeline for the current validated mouse brain test dataset.
-
-- `smoder/config/defaults.py`  
-  Default configuration utilities for the current pipeline.
-
----
-
 ## Installation
 
-### 1. Clone the repository
+### Requirements
+
+The current validated environment is:
+
+- Linux
+- conda-based Python environment
+- Python 3.12
+
+The main tutorial and recommended workflow are currently oriented toward this environment.
+
+### Clone the repository
 
 ```bash
 git clone <repository_url>
 cd SMODER
 ```
 
-### 2. Create a Python environment
+### Create a Python environment
 
-A dedicated Python environment is recommended.
+A dedicated environment is recommended.
 
-For example, using conda:
+For example:
 
 ```bash
 conda create -n smoder python=3.12
 conda activate smoder
 ```
 
-### 3. Install the package in editable mode
+### Install the package
 
 ```bash
 pip install -e .
 ```
 
-This installs SMODER in editable mode so that package imports always reflect the latest source code during development. 
-
->The current validated environment is Linux + conda. The main tutorial and recommended workflow are currently oriented toward this environment.
-
----
-
-## Input Data
-
-The current validated workflow expects three input files:
-
-- a single-cell reference RNA dataset
-- a spatial RNA dataset
-- a second spatial modality dataset
-
-A typical dataset layout may look like this:
-
-```text
-<data_root>/mousebrain_H3K27ac/
-├── sc_mousebrain_processed.h5ad
-├── RNA.h5ad
-└── peak.h5ad
-```
-
-The current validated example uses:
-
-- single-cell reference RNA
-- spatial RNA
-- spatial peak data
-
----
 ## Data
 
-SMODER does not currently store large research datasets directly in the GitHub repository.
+The current validated example uses a mouse brain RNA + peak dataset.
 
-The validated mouse brain example expects the following input structure:
+Required input files:
+
+- `sc_mousebrain_processed.h5ad`: single-cell reference RNA
+- `RNA.h5ad`: spatial RNA
+- `peak.h5ad`: spatial peak data
+
+Example directory layout:
 
 ```text
 data/
@@ -157,118 +115,49 @@ data/
    └── peak.h5ad
 ```
 
-Required files:
+Please prepare the required dataset files separately and place them into a local data directory matching the expected structure.
 
-- `sc_mousebrain_processed.h5ad`: single-cell reference RNA
-- `RNA.h5ad`: spatial RNA
-- `peak.h5ad`: spatial peak data
-
-Large datasets should be prepared separately and placed into a local data directory matching the expected structure. Additional details are provided in the documentation site and in `data/README.md`.
-
----
+Additional notes on data preparation are provided in `data/README.md` and in the documentation site.
 
 ## Quick Start
 
-### Run the current validated pipeline
+Run the current validated pipeline:
 
 ```bash
 python -m smoder.pipelines.mousebrain_h3k27ac
 ```
 
-### Typical outputs
+Typical outputs include:
 
-A typical output directory may contain:
+- `cell_type_proportions.csv`
+- `spatial_decon_result.h5ad`
+- `training_log.txt`
 
-```text
-<output_dir>/
-├── cell_type_proportions.csv
-├── spatial_decon_result.h5ad
-└── training_log.txt
-```
+## Documentation
 
----
+Documentation is available through Read the Docs.
 
-## Method Overview
+It currently includes:
 
-SMODER currently adopts a modular workflow for spatial multi-omics deconvolution, including:
-
-1. preprocessing of single-cell reference RNA data
-2. preprocessing of spatial RNA data
-3. preprocessing of a second spatial modality
-4. feature engineering and dimensionality reduction
-5. graph construction for spatial and feature relationships
-6. model training and latent representation learning
-7. deconvolution result generation and result export
-
-The codebase is structured so that preprocessing, model definition, configuration, and end-to-end pipelines are separated into different modules for easier maintenance and extension.
-
----
-
-## Development Principles
-
-The current refactoring follows several principles:
-
-- keep the runnable pipeline working during reorganization
-- gradually replace legacy top-level scripts with package modules
-- separate model code, preprocessing code, pipeline code, and configuration code
-- keep execution reproducible while improving project structure
-- prepare the codebase for future tutorials and documentation deployment
-
-At this stage, module-based execution is the recommended entry point:
-
-```bash
-python -m smoder.pipelines.mousebrain_h3k27ac
-```
-
----
-
-## Documentation Plan
-
-Planned documentation components include:
-
-- tutorial notebooks
-- package usage examples
-- pipeline-specific instructions
-- API-oriented documentation pages
-- Sphinx documentation
-- Read the Docs deployment
-
----
+- installation guide
+- data preparation guide
+- tutorial notebook
+- API reference
 
 ## Roadmap
 
 Planned next steps include:
 
-- cleaner package interfaces
 - additional runnable pipelines for other datasets
-- improved script entry points
-- tutorial notebooks
-- more complete installation and usage instructions
-- documentation website deployment
-- further cleanup of legacy top-level scripts
-
----
+- improved package interfaces
+- more complete dataset instructions
+- formal PyPI release
+- continued documentation improvements
 
 ## Citation
 
-If you use SMODER in your work, please cite the corresponding paper or project release once the formal citation information becomes available.
-
-*Currently: citation information is not yet finalized.*
-
----
+If you use SMODER in your work, please cite the corresponding paper or project release once formal citation information becomes available.
 
 ## Contact
 
-Project contact information can be added here after the repository is prepared for public release.
-
-Example:
-
-- maintainer: `<name>`
-- email: `<email>`
-- lab / group: `<lab_or_group_name>`
-
----
-
-## Disclaimer
-
-SMODER is still under active development. Interfaces, file layout, configuration details, and documentation may continue to change during the refactoring process.
+Maintainer: Shucun Xiong

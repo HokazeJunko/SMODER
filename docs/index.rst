@@ -15,10 +15,6 @@ The current implementation provides a modular workflow for:
 
 The package is organized around reusable components for preprocessing, modeling, configuration, and end-to-end pipeline execution.
 
-.. note::
-
-   The current validated environment is Linux + conda. The main tutorial and recommended workflow are currently oriented toward this environment.
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

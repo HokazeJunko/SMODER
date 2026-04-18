@@ -10,7 +10,7 @@ The current validated environment is:
 - conda-based Python environment
 - Python 3.12
 
-A dedicated environment is recommended.
+The main tutorial and recommended workflow are currently oriented toward this environment.
 
 Clone the repository
 --------------------
@@ -49,6 +49,4 @@ Current recommended execution method
 Data preparation
 ----------------
 
-SMODER does not currently ship large example datasets directly inside the repository.
-
-Please prepare the required input datasets separately and organize them according to the expected structure described in the :doc:`data` page.
+Before running the example workflow, please prepare the required input files as described in the :doc:`data` page.
