@@ -26,3 +26,6 @@ outputs/
 .venv/
 dist/
 build/
+
+# Large unreferenced per-cell-type result images
+docs/_static/results/mousebrain_h3k27ac/cell_type_proportions/
