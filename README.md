@@ -11,6 +11,8 @@ The current implementation provides a modular workflow for:
 - graph construction
 - model training
 - deconvolution result generation
+- postprocessing reconstruction
+- spatial result visualization
 
 The package is organized around reusable components for preprocessing, modeling, configuration, and end-to-end pipeline execution.
 
@@ -28,6 +30,8 @@ What is currently available:
 
 - the `smoder` package can be installed and imported
 - the current mouse brain H3K27ac pipeline can run end-to-end
+- postprocessing utilities are available for denoised RNA and second-modality reconstruction
+- visualization utilities are available for spatial heatmaps and embedding-based clustering
 - tutorial and API documentation are available through Read the Docs
 - output files can be generated successfully, including:
   - `cell_type_proportions.csv`
@@ -49,7 +53,9 @@ SMODER/
 │   ├── config/
 │   ├── models/
 │   ├── pipelines/
-│   └── preprocessing/
+│   ├── preprocessing/
+│   ├── postprocessing/
+│   └── visualization/
 ├── data/
 ├── docs/
 ├── scripts/
@@ -140,13 +146,17 @@ Typical outputs include:
 
 ## Documentation
 
-Documentation is available through Read the Docs.
+Documentation is available through Read the Docs:
+
+https://smoder.readthedocs.io/en/latest/
 
 It currently includes:
 
 - installation guide
 - data preparation guide
 - tutorial notebook
+- result visualizations
+- postprocessing and visualization utilities
 - API reference
 
 ## Roadmap

@@ -29,3 +29,12 @@ build/
 
 # Large unreferenced per-cell-type result images
 docs/_static/results/mousebrain_h3k27ac/cell_type_proportions/
+# Large unreferenced per-cell-type result images
+docs/_static/results/**/cell_type_proportions/
+
+# Local legacy reconstruction drafts
+legacy/reconstruction.py
+legacy/reconstruction_doing.py
+
+# Legacy prototype scripts kept locally only
+legacy/

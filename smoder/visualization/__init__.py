@@ -1,21 +1,25 @@
-"""SMODER: spatial multi-omics deconvolution toolkit."""
+"""Visualization utilities for SMODER."""
 
-from smoder.models import SpaMultiDecon_two_modals
-from smoder.postprocessing import omics_reconstruct
-from smoder.visualization import (
+from .spatial import (
     get_cell_type_proportions,
+    get_spatial_xy,
     plot_all_cell_type_proportions,
     plot_cell_type_proportion_panel,
     plot_embedding_spatial_clustering,
+    plot_individual_cell_type_heatmaps,
     plot_reconstruction_heatmaps,
+    save_spatial_categorical,
+    save_spatial_continuous,
 )
 
 __all__ = [
-    "SpaMultiDecon_two_modals",
-    "omics_reconstruct",
     "get_cell_type_proportions",
+    "get_spatial_xy",
     "plot_all_cell_type_proportions",
     "plot_cell_type_proportion_panel",
     "plot_embedding_spatial_clustering",
+    "plot_individual_cell_type_heatmaps",
     "plot_reconstruction_heatmaps",
+    "save_spatial_categorical",
+    "save_spatial_continuous",
 ]
