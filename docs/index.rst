@@ -16,7 +16,6 @@ Contents
    data
    tutorials
    api
-   results
 
 Indices and tables
 ------------------
