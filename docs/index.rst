@@ -1,23 +1,25 @@
 SMODER documentation
 ====================
 
-SMODER is a Python toolkit for spatial multi-omics deconvolution.
+Welcome to the documentation for **SMODER**, a Python toolkit for spatial multi-omics deconvolution.
 
-It provides reusable components for preprocessing, feature engineering, graph construction, model training, postprocessing, and spatial result visualization.
+SMODER integrates spatial transcriptomics with an additional spatial modality, such as chromatin accessibility peaks or protein measurements, to infer cell-type composition and related multi-omic signals across spatial locations.
+
+Contents
+--------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Main contents
 
    installation
    data
    tutorials
-   results
    api
-   modules
+   results
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

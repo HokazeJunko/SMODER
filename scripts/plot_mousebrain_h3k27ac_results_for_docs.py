@@ -1,57 +1,124 @@
 import os
-import shutil
+from pathlib import Path
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import scanpy as sc
+from matplotlib.lines import Line2D
 
 from smoder.visualization import (
     plot_all_cell_type_proportions,
     plot_cell_type_proportion_panel,
-    plot_embedding_spatial_clustering,
     plot_individual_cell_type_heatmaps,
     plot_reconstruction_heatmaps,
 )
 
-PROJECT_ROOT = "/data/xiongsc/projects/SMODER"
 
-SPATIAL_RESULT = "/data/baiyh/keyan/SpaMultiDecon/Mousebrain_H3K27ac_result/SMODER_f3/spatial_decon_result.h5ad"
+PROJECT_ROOT = Path("/data/xiongsc/projects/SMODER")
 
-RECON_DIR = os.path.join(PROJECT_ROOT, "outputs", "mousebrain_H3K27ac_reconstruction_for_docs")
-RNA_RECON = os.path.join(RECON_DIR, "RNA_recon.h5ad")
-EPIGENOMICS_RECON = os.path.join(RECON_DIR, "ATAC_recon.h5ad")
+SPATIAL_RESULT = Path("/data/baiyh/keyan/SpaMultiDecon/Mousebrain_H3K27ac_result/SMODER_f3/spatial_decon_result.h5ad")
 
-OUT_DIR = os.path.join(PROJECT_ROOT, "docs", "_static", "results", "mousebrain_h3k27ac")
-CELLTYPE_DIR = os.path.join(OUT_DIR, "cell_type_proportions")
+RECON_DIR = PROJECT_ROOT / "outputs" / "mousebrain_H3K27ac_reconstruction_for_docs"
+RNA_RECON = RECON_DIR / "RNA_recon.h5ad"
+EPIGENOMICS_RECON = RECON_DIR / "ATAC_recon.h5ad"
 
-os.makedirs(OUT_DIR, exist_ok=True)
-os.makedirs(CELLTYPE_DIR, exist_ok=True)
+OUT_DIR = PROJECT_ROOT / "docs" / "_static" / "results" / "mousebrain_h3k27ac"
+CELLTYPE_DIR = OUT_DIR / "cell_type_proportions"
+
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+CELLTYPE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def copy_training_loss_if_available():
-    candidates = [
-        os.path.join(PROJECT_ROOT, "outputs", "mousebrain_H3K27ac_run2", "trained_models", "training_losses.png"),
-        os.path.join(PROJECT_ROOT, "outputs", "mousebrain_H3K27ac", "trained_models", "training_losses.png"),
-        os.path.join(PROJECT_ROOT, "outputs", "mousebrain_H3K27ac_run3", "trained_models", "training_losses.png"),
+def plot_embedding_clustering_with_dot_legend(
+    adata,
+    out_path,
+    embedding_key="embedding",
+    cluster_key="smoder_cluster",
+    method="leiden",
+    resolution=0.6,
+    n_neighbors=15,
+    point_size=6,
+):
+    if embedding_key not in adata.obsm:
+        raise KeyError(f"adata.obsm['{embedding_key}'] not found.")
+
+    adata_tmp = adata.copy()
+    sc.pp.neighbors(adata_tmp, use_rep=embedding_key, n_neighbors=n_neighbors)
+
+    if method.lower() == "leiden":
+        sc.tl.leiden(adata_tmp, resolution=resolution, key_added=cluster_key)
+        method_label = "Leiden"
+    elif method.lower() == "louvain":
+        sc.tl.louvain(adata_tmp, resolution=resolution, key_added=cluster_key)
+        method_label = "Louvain"
+    else:
+        raise ValueError("method must be 'leiden' or 'louvain'.")
+
+    labels = adata_tmp.obs[cluster_key].astype(str)
+
+    def sort_key(x):
+        try:
+            return int(x)
+        except ValueError:
+            return x
+
+    categories = sorted(labels.unique(), key=sort_key)
+    cmap = plt.get_cmap("tab20", len(categories))
+    color_map = {cat: cmap(i) for i, cat in enumerate(categories)}
+    colors = labels.map(color_map).values
+
+    coords = np.asarray(adata_tmp.obsm["spatial"])
+    x = coords[:, 0]
+    y = -coords[:, 1]
+
+    fig, ax = plt.subplots(figsize=(7.2, 5.6))
+    ax.scatter(x, y, c=list(colors), s=point_size, edgecolors="none")
+
+    ax.set_title(f"Spatial clustering based on learned embeddings ({method_label})")
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    handles = [
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="None",
+            markerfacecolor=color_map[cat],
+            markeredgecolor=color_map[cat],
+            markersize=7,
+            label=str(cat),
+        )
+        for cat in categories
     ]
 
-    for src in candidates:
-        if os.path.exists(src):
-            dst = os.path.join(OUT_DIR, "mousebrain_training_losses.png")
-            shutil.copy2(src, dst)
-            print(f"Copied: {src} -> {dst}")
-            return
+    ax.legend(
+        handles=handles,
+        title="Cluster",
+        bbox_to_anchor=(1.02, 1),
+        loc="upper left",
+        frameon=False,
+        borderaxespad=0.0,
+        handlelength=0.8,
+        handletextpad=0.4,
+    )
 
-    print("No training_losses.png found.")
+    fig.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    return adata_tmp
 
 
 def plot_reconstruction_if_available(recon_path, prefix, title_prefix):
-    if not os.path.exists(recon_path):
+    if not recon_path.exists():
         print(f"Skip reconstruction plots because file not found: {recon_path}")
         return
 
     recon_adata = sc.read_h5ad(recon_path)
     plot_reconstruction_heatmaps(
         recon_adata,
-        out_dir=OUT_DIR,
+        out_dir=str(OUT_DIR),
         prefix=prefix,
         title_prefix=title_prefix,
     )
@@ -65,12 +132,11 @@ def main():
     print("adata shape:", adata.shape)
     print("obsm keys:", list(adata.obsm.keys()))
 
-    # Mousebrain metadata columns are the first 9 obs columns.
     obs_start_col = 9
 
     plot_all_cell_type_proportions(
         adata,
-        out_path=os.path.join(OUT_DIR, "mousebrain_cell_type_proportion_all59.png"),
+        out_path=str(OUT_DIR / "mousebrain_cell_type_proportion_all59.png"),
         obs_start_col=obs_start_col,
         ncols=6,
         title="Spatial heatmaps of cell-type proportions",
@@ -79,7 +145,7 @@ def main():
 
     plot_cell_type_proportion_panel(
         adata,
-        out_path=os.path.join(OUT_DIR, "mousebrain_cell_type_proportion_top12.png"),
+        out_path=str(OUT_DIR / "mousebrain_cell_type_proportion_top12.png"),
         obs_start_col=obs_start_col,
         top_n=12,
         ncols=4,
@@ -89,22 +155,20 @@ def main():
 
     plot_individual_cell_type_heatmaps(
         adata,
-        out_dir=CELLTYPE_DIR,
+        out_dir=str(CELLTYPE_DIR),
         obs_start_col=obs_start_col,
     )
     print(f"Saved individual cell-type heatmaps to: {CELLTYPE_DIR}")
 
-    plot_embedding_spatial_clustering(
+    plot_embedding_clustering_with_dot_legend(
         adata,
-        out_path=os.path.join(OUT_DIR, "mousebrain_embedding_spatial_clustering.png"),
+        out_path=str(OUT_DIR / "mousebrain_embedding_spatial_clustering.png"),
         embedding_key="embedding",
         method="leiden",
         resolution=0.6,
         n_neighbors=15,
     )
-    print("Saved embedding-based spatial clustering.")
-
-    copy_training_loss_if_available()
+    print("Saved embedding-based spatial clustering with dot legend.")
 
     plot_reconstruction_if_available(
         RNA_RECON,

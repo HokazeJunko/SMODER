@@ -1,12 +1,13 @@
 Tutorials
 =========
 
-The tutorials demonstrate how to run SMODER, inspect its outputs, and generate downstream visualizations.
+This section provides step-by-step tutorials for running SMODER and visualizing representative results.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Tutorial pages
 
    tutorials/01_mousebrain_h3k27ac_quickstart
-   tutorials/02_result_visualization_and_postprocessing
-
-See the :doc:`results` page for representative output figures from the simulated human melanoma, Mousebrain H3K27ac, and HBC datasets.
+   tutorials/02_mousebrain_h3k27ac_results
+   tutorials/03_simulated_human_melanoma_results
+   tutorials/04_hbc_results
