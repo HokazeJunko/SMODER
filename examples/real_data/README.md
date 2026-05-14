@@ -18,9 +18,20 @@ python examples/real_data/run_mousebrain_h3k27ac.py `
   --st-modality2 path/to/peak.h5ad `
   --output-dir outputs/mousebrain_h3k27ac
 
+run_hbc.py
+
+This script runs SMODER on a real HBC RNA + ADT dataset.
+
+Example usage:
+
+python examples/real_data/run_hbc.py `
+  --sc-rna path/to/HBC/sc.h5ad `
+  --st-rna path/to/HBC/HBC_RNA.h5ad `
+  --st-adt path/to/HBC/HBC_ADT.h5ad `
+  --output-dir outputs/hbc
+
 ## Planned scripts
 
-run_hbc.py
 run_mouse_embryo.py
 run_mousebrain_h3k27me3.py
 
