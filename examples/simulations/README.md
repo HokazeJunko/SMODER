@@ -9,7 +9,7 @@ The simulation workflow usually has two stages:
 
 ## Shared utility module
 
-spatial_simulation_utils.py
+`spatial_simulation_utils.py`
 
 This file contains shared simulation utilities, including:
 
@@ -20,22 +20,21 @@ This file contains shared simulation utilities, including:
 - noise and perturbation utilities
 - helper functions for simulated multi-omics data
 
-The dataset-specific generation scripts will import this utility module.
+The dataset-specific generation scripts import this utility module.
 
 ## Subdirectories
 
+```text
 single_reference/
-
-Simulation examples that start from a single-cell RNA reference and generate simulated spatial RNA plus a simulated second modality.
+  Simulation examples that start from a single-cell RNA reference and generate simulated spatial RNA plus a simulated second modality.
 
 multi_reference/
-
-Simulation examples that start from paired multi-modal single-cell references, such as RNA+ADT or RNA+ATAC.
+  Simulation examples that start from paired multi-modal single-cell references, such as RNA+ADT or RNA+ATAC.
 
 paired_bimodal/
-
-Paired bimodal simulation examples where both modalities are treated as paired references.
+  Paired bimodal simulation examples where both modalities are treated as paired references.
+```
 
 ## Important notes
 
-Large generated files are not included in the GitHub repository. Generated .h5ad, .h5mu, model checkpoints, logs, and result folders should be stored locally and excluded from Git.
+Large generated files are not included in the GitHub repository. Generated `.h5ad`, `.h5mu`, model checkpoints, logs, and result folders should be stored locally and excluded from Git.
