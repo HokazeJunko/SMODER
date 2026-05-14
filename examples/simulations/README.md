@@ -7,6 +7,21 @@ The simulation workflow usually has two stages:
 1. Generate simulated spatial RNA and second-modality data
 2. Run SMODER on the generated simulated data
 
+## Shared utility module
+
+spatial_simulation_utils.py
+
+This file contains shared simulation utilities, including:
+
+- spatial pattern generation
+- structured region assignment
+- spot-level cell sampling
+- simulated spatial coordinate generation
+- noise and perturbation utilities
+- helper functions for simulated multi-omics data
+
+The dataset-specific generation scripts will import this utility module.
+
 ## Subdirectories
 
 single_reference/
