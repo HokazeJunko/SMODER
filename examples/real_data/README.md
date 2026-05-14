@@ -30,12 +30,23 @@ python examples/real_data/run_hbc.py `
   --st-adt path/to/HBC/HBC_ADT.h5ad `
   --output-dir outputs/hbc
 
+run_mousebrain_h3k27me3.py
+
+This script runs SMODER on a real Mousebrain RNA + H3K27me3 peak dataset.
+
+Example usage:
+
+python examples/real_data/run_mousebrain_h3k27me3.py `
+  --sc-rna path/to/MouseBrain/sc_mousebrain_processed.h5ad `
+  --st-rna path/to/MouseBrain/MouseBrain_RNA_modified.h5ad `
+  --st-atac path/to/MouseBrain/MouseBrain_peak_H3K27me3_modified.h5ad `
+  --output-dir outputs/mousebrain_h3k27me3
+
 ## Planned scripts
 
 run_mouse_embryo.py
-run_mousebrain_h3k27me3.py
 
-These scripts will be migrated from the original internal experiment scripts after their paths, imports, and dataset-specific parameters are cleaned for public release.
+This script will be migrated from the original internal experiment script after paths, imports, and dataset-specific parameters are cleaned for public release.
 
 ## Required inputs
 
