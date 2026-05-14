@@ -38,3 +38,13 @@ legacy/reconstruction_doing.py
 
 # Legacy prototype scripts kept locally only
 legacy/
+
+# Example-generated data and outputs
+examples/**/outputs/
+examples/**/*.h5ad
+examples/**/*.h5mu
+examples/**/*.csv
+examples/**/*.pt
+examples/**/*.pth
+examples/**/*.pkl
+examples/**/trained_models/
