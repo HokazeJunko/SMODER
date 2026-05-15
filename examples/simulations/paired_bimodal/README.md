@@ -1,6 +1,8 @@
-# Paired bimodal simulation examples
+﻿# Paired bimodal simulation examples
 
 This folder contains paired RNA+ADT and RNA+ATAC simulation examples.
+
+This workflow uses the local helper module spatial_sim_function.py.
 
 ## Available scripts
 

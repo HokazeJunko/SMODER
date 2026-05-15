@@ -1,6 +1,8 @@
-# Single-reference simulation examples
+﻿# Single-reference simulation examples
 
 This folder contains simulation examples that start from a single-cell RNA reference.
+
+This workflow uses the local helper module simulate_new.py.
 
 Unlike the paired_bimodal and multi_reference examples, this workflow does not assume that paired single-cell second-modality data are already available. Instead, the workflow first generates a synthetic second-modality reference from the single-cell RNA reference, and then uses the generated multi-modal reference to simulate spatial multi-omics data.
 

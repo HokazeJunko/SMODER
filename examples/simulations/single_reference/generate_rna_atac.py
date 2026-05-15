@@ -330,7 +330,7 @@ def run_second_sampling(
     import pandas as pd
     import scipy.sparse
 
-    import spatial_simulation_utils as ssf
+    import simulate_new as ssf
 
     ref_mod = list(modality_config.keys())[0]
     coords = simulation_mdata[ref_mod].obsm["spatial"]
@@ -465,7 +465,7 @@ def main() -> None:
     import pandas as pd
     import scanpy as sc
 
-    import spatial_simulation_utils as ssf
+    import simulate_new as ssf
 
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -624,3 +624,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

@@ -1,6 +1,8 @@
-# Multi-reference simulation examples
+﻿# Multi-reference simulation examples
 
 This folder contains simulation examples that start from paired multi-modal single-cell references, such as RNA+ADT or RNA+ATAC.
+
+This workflow uses the local helper module spatial_sim_function.py.
 
 Compared with the simpler paired_bimodal examples, these scripts include an additional spatial-disruption step. The workflow is:
 
