@@ -88,4 +88,5 @@ training_log.txt
 trained_models/
 ```
 
-Large generated files and model outputs should not be committed to GitHub.
+Generated data files, model checkpoints, logs, and result folders are not included in this repository. Users should save them locally.
+
