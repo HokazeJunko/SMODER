@@ -1,6 +1,6 @@
 # Single-reference simulation examples
 
-This folder contains simulation examples that start from a single-cell RNA reference.
+This folder contains dataset-specific single-reference simulation examples migrated from the original experiment scripts.
 
 This workflow uses the local helper module `simulate_new.py`.
 
@@ -8,7 +8,7 @@ Unlike the `paired_bimodal` and `multi_reference` examples, this workflow does n
 
 ## Recommended scripts for reproducing original experiments
 
-The dataset-specific scripts below are migrated from the original single-reference simulation scripts. They are preferred when the goal is to reproduce the original experiments.
+Each dataset below has its own generation script and SMODER run script. These dataset-specific scripts are preferred for reproducing the original experiments.
 
 ### HBC
 
@@ -109,17 +109,6 @@ python examples/simulations/single_reference/run_spleen.py \
   --st-modality2 outputs/single_reference_spleen/simulation_adt.h5ad \
   --output-dir outputs/single_reference_spleen/SMODER
 ```
-
-## Generic template scripts
-
-The following scripts are kept as simplified templates:
-
-```text
-generate_rna_atac.py
-run_rna_atac.py
-```
-
-For reproducing the original experiments, prefer the dataset-specific scripts listed above.
 
 ## Expected generated files
 
