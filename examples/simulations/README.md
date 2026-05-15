@@ -1,4 +1,4 @@
-﻿# Simulation examples
+# Simulation examples
 
 This directory contains scripts for generating simulated spatial multi-omics datasets and running SMODER on the simulated data.
 
@@ -33,4 +33,10 @@ Paired bimodal simulation examples where both modalities are treated as paired r
 
 ## Important notes
 
-Large generated files are not included in the GitHub repository. Generated `.h5ad`, `.h5mu`, model checkpoints, logs, and result folders should be stored locally and excluded from Git.
+Large generated files are not included in the GitHub repository. The following generated files or folders should be stored locally and excluded from Git:
+
+- `.h5ad` files
+- `.h5mu` files
+- model checkpoints
+- logs
+- result folders
