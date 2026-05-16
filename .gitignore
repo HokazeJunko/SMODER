@@ -40,11 +40,11 @@ legacy/reconstruction_doing.py
 legacy/
 
 # Example-generated data and outputs
-examples/**/outputs/
-examples/**/*.h5ad
-examples/**/*.h5mu
-examples/**/*.csv
-examples/**/*.pt
-examples/**/*.pth
-examples/**/*.pkl
-examples/**/trained_models/
+analysis_scripts/**/outputs/
+analysis_scripts/**/*.h5ad
+analysis_scripts/**/*.h5mu
+analysis_scripts/**/*.csv
+analysis_scripts/**/*.pt
+analysis_scripts/**/*.pth
+analysis_scripts/**/*.pkl
+analysis_scripts/**/trained_models/

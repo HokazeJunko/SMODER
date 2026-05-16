@@ -1,13 +1,13 @@
-# SMODER Examples
+# SMODER Analysis Scripts
 
-This directory contains example scripts for running SMODER on real datasets and simulated datasets.
+This directory contains analysis scripts for running SMODER on real datasets and simulated datasets.
 
-The example scripts are provided for reproducibility and adaptation. Large input datasets are not included in this repository. Users should download or prepare the required `.h5ad` / `.h5mu` files and pass their own file paths to the scripts.
+The analysis scripts are provided for reproducibility and adaptation. Large input datasets are not included in this repository. Users should download or prepare the required `.h5ad` / `.h5mu` files and pass their own file paths to the scripts.
 
 ## Directory structure
 
 ```text
-examples/
+analysis_scripts/
 |-- real_data/
 |   |-- scripts for real spatial multi-omics datasets
 |

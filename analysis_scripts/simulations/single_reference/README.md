@@ -1,4 +1,4 @@
-﻿# Single-reference simulation examples
+# Single-reference simulation examples
 
 This folder contains dataset-specific single-reference simulation examples migrated from the original experiment scripts.
 
@@ -15,7 +15,7 @@ Each dataset below has its own generation script and SMODER run script. These da
 Generate simulated data:
 
 ```bash
-python examples/simulations/single_reference/generate_hbc.py \
+python analysis_scripts/simulations/single_reference/generate_hbc.py \
   --raw-data-path path/to/HBC/reference_data \
   --output-dir outputs/single_reference_hbc
 ```
@@ -23,7 +23,7 @@ python examples/simulations/single_reference/generate_hbc.py \
 Run SMODER:
 
 ```bash
-python examples/simulations/single_reference/run_hbc.py \
+python analysis_scripts/simulations/single_reference/run_hbc.py \
   --sc-rna path/to/HBC/sc.h5ad \
   --st-rna outputs/single_reference_hbc/simulation_rna.h5ad \
   --st-modality2 outputs/single_reference_hbc/simulation_adt.h5ad \
@@ -35,7 +35,7 @@ python examples/simulations/single_reference/run_hbc.py \
 Generate simulated data:
 
 ```bash
-python examples/simulations/single_reference/generate_hgm.py \
+python analysis_scripts/simulations/single_reference/generate_hgm.py \
   --raw-data-path path/to/HGM/reference_data \
   --output-dir outputs/single_reference_hgm
 ```
@@ -43,7 +43,7 @@ python examples/simulations/single_reference/generate_hgm.py \
 Run SMODER:
 
 ```bash
-python examples/simulations/single_reference/run_hgm.py \
+python analysis_scripts/simulations/single_reference/run_hgm.py \
   --sc-rna path/to/HGM/sc.h5ad \
   --st-rna outputs/single_reference_hgm/simulation_rna.h5ad \
   --st-modality2 outputs/single_reference_hgm/simulation_adt.h5ad \
@@ -55,7 +55,7 @@ python examples/simulations/single_reference/run_hgm.py \
 Generate simulated data:
 
 ```bash
-python examples/simulations/single_reference/generate_lymph_node.py \
+python analysis_scripts/simulations/single_reference/generate_lymph_node.py \
   --raw-data-path path/to/lymph_node/reference_data \
   --output-dir outputs/single_reference_lymph_node
 ```
@@ -63,7 +63,7 @@ python examples/simulations/single_reference/generate_lymph_node.py \
 Run SMODER:
 
 ```bash
-python examples/simulations/single_reference/run_lymph_node.py \
+python analysis_scripts/simulations/single_reference/run_lymph_node.py \
   --sc-rna path/to/lymph_node/sc.h5ad \
   --st-rna outputs/single_reference_lymph_node/simulation_rna.h5ad \
   --st-modality2 outputs/single_reference_lymph_node/simulation_adt.h5ad \
@@ -75,7 +75,7 @@ python examples/simulations/single_reference/run_lymph_node.py \
 Generate simulated data:
 
 ```bash
-python examples/simulations/single_reference/generate_mousebrain.py \
+python analysis_scripts/simulations/single_reference/generate_mousebrain.py \
   --raw-data-path path/to/mousebrain/reference_data \
   --output-dir outputs/single_reference_mousebrain
 ```
@@ -83,7 +83,7 @@ python examples/simulations/single_reference/generate_mousebrain.py \
 Run SMODER:
 
 ```bash
-python examples/simulations/single_reference/run_mousebrain.py \
+python analysis_scripts/simulations/single_reference/run_mousebrain.py \
   --sc-rna path/to/mousebrain/sc_mousebrain_processed.h5ad \
   --st-rna outputs/single_reference_mousebrain/simulation_rna.h5ad \
   --st-modality2 outputs/single_reference_mousebrain/simulation_atac.h5ad \
@@ -95,7 +95,7 @@ python examples/simulations/single_reference/run_mousebrain.py \
 Generate simulated data:
 
 ```bash
-python examples/simulations/single_reference/generate_spleen.py \
+python analysis_scripts/simulations/single_reference/generate_spleen.py \
   --raw-data-path path/to/spleen/reference_data \
   --output-dir outputs/single_reference_spleen
 ```
@@ -103,7 +103,7 @@ python examples/simulations/single_reference/generate_spleen.py \
 Run SMODER:
 
 ```bash
-python examples/simulations/single_reference/run_spleen.py \
+python analysis_scripts/simulations/single_reference/run_spleen.py \
   --sc-rna path/to/spleen/sc.h5ad \
   --st-rna outputs/single_reference_spleen/simulation_rna.h5ad \
   --st-modality2 outputs/single_reference_spleen/simulation_adt.h5ad \

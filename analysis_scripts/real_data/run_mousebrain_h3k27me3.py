@@ -1,17 +1,17 @@
-﻿"""Run SMODER on the Mouse embryo RNA+ATAC real dataset.
+"""Run SMODER on the Mousebrain H3K27me3 RNA+peak real dataset.
 
-This script runs SMODER on a real Mouse embryo spatial RNA+ATAC dataset.
+This script runs SMODER on a real Mousebrain RNA+H3K27me3 peak dataset.
 
 Large input files are not included in this repository. Users should provide
 their own local paths.
 
 Example
 -------
-python examples/simulations/paired_bimodal/run_atac_rna.py
-  --sc-rna path/to/mouse_embryo/mouse_embryo_sc_filtered.h5ad
-  --st-rna path/to/mouse_embryo/MouseEmbryo25um_RNA_updated.h5ad
-  --st-atac path/to/mouse_embryo/MouseEmbryo_peak_ATAC_updated.h5ad
-  --output-dir outputs/mouse_embryo
+python analysis_scripts/simulations/paired_bimodal/run_atac_rna.py
+  --sc-rna path/to/MouseBrain/sc_mousebrain_processed.h5ad
+  --st-rna path/to/MouseBrain/MouseBrain_RNA_modified.h5ad
+  --st-atac path/to/MouseBrain/MouseBrain_peak_H3K27me3_modified.h5ad
+  --output-dir outputs/mousebrain_h3k27me3
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from pathlib import Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run SMODER on the Mouse embryo RNA+ATAC real dataset."
+        description="Run SMODER on the Mousebrain H3K27me3 RNA+peak real dataset."
     )
 
     parser.add_argument(
@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--st-atac",
         required=True,
-        help="Path to the spatial ATAC/peak .h5ad file.",
+        help="Path to the spatial H3K27me3 peak .h5ad file.",
     )
     parser.add_argument(
         "--output-dir",
@@ -51,12 +51,12 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument(
         "--ref-celltype-col",
-        default="cellType",
+        default="annotation_1",
         help="Column in scRNA obs that stores cell-type labels.",
     )
     parser.add_argument(
         "--sample-id-col",
-        default="sampleID",
+        default="sample",
         help="Column in scRNA obs that stores sample IDs.",
     )
 
@@ -80,9 +80,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning-rate", type=float, default=2e-3)
     parser.add_argument("--hidden-dim", type=int, default=512)
     parser.add_argument("--weight-nb-loss", type=float, default=1.0)
-    parser.add_argument("--weight-recon-loss", type=float, default=0.001)
-    parser.add_argument("--weight-consistency", type=float, default=0.1)
-    parser.add_argument("--weight-spatial", type=float, default=1e-4)
+    parser.add_argument("--weight-recon-loss", type=float, default=0.0001)
+    parser.add_argument("--weight-consistency", type=float, default=1.0)
+    parser.add_argument("--weight-spatial", type=float, default=1e-5)
 
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument(
@@ -177,7 +177,7 @@ def load_data(base_config: dict, params: dict):
         adata_st_rna.var_names_make_unique()
     print(f"  spatial RNA shape: {adata_st_rna.shape}")
 
-    print("Loading spatial ATAC/peak...")
+    print("Loading spatial H3K27me3 peak...")
     adata_st_atac = ad.read_h5ad(base_config["st_adt_path"])
     print(f"  spatial ATAC shape: {adata_st_atac.shape}")
 
@@ -446,7 +446,7 @@ def save_results(adata_result, model, params: dict, base_config: dict, dim_rna: 
 
     log_path = Path(base_config["output_dir"]) / "training_log.txt"
     with open(log_path, "w", encoding="utf-8") as f:
-        f.write("# SMODER Mouse embryo RNA+ATAC real-data run log\n")
+        f.write("# SMODER Mousebrain H3K27me3 RNA+peak real-data run log\n")
         f.write(f"Analysis time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("\n## Input files\n")
         f.write(f"- scRNA reference: {Path(base_config['sc_rna_path']).name}\n")
@@ -473,7 +473,7 @@ def main() -> None:
     base_config = build_base_config(args)
     params = build_params(args)
 
-    print("Running SMODER on the Mouse embryo RNA+ATAC real dataset")
+    print("Running SMODER on the Mousebrain H3K27me3 RNA+peak real dataset")
     print(f"scRNA reference: {base_config['sc_rna_path']}")
     print(f"spatial RNA:     {base_config['st_rna_path']}")
     print(f"spatial ATAC:    {base_config['st_adt_path']}")
@@ -486,10 +486,12 @@ def main() -> None:
     adata_result = train_model(model, params, base_config)
     save_results(adata_result, model, params, base_config, dim_rna, dim_modal2)
 
-    print("SMODER Mouse embryo RNA+ATAC run finished successfully.")
+    print("SMODER Mousebrain H3K27me3 RNA+peak run finished successfully.")
 
 
 if __name__ == "__main__":
     main()
+
+
 
 

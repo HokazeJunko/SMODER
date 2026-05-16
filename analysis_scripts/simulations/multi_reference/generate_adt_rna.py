@@ -1,4 +1,4 @@
-﻿"""Generate a multi-reference RNA+ADT simulated spatial dataset.
+"""Generate a multi-reference RNA+ADT simulated spatial dataset.
 
 This script starts from paired single-cell RNA and ADT reference files,
 generates structured spatial spots, and optionally re-samples selected
@@ -9,7 +9,7 @@ their own local paths.
 
 Example
 -------
-python examples/simulations/multi_reference/generate_adt_rna.py `
+python analysis_scripts/simulations/multi_reference/generate_adt_rna.py `
   --input-dir path/to/reference_data `
   --rna-file humanBrain_rna_top10_celltypes.h5ad `
   --adt-file humanBrain_adt_top10_celltypes.h5ad `

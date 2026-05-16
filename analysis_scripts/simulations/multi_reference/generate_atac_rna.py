@@ -1,4 +1,4 @@
-﻿"""Generate a multi-reference RNA+ATAC simulated spatial dataset.
+"""Generate a multi-reference RNA+ATAC simulated spatial dataset.
 
 This script starts from paired single-cell RNA and ATAC reference files,
 generates structured spatial spots, and optionally re-samples selected
@@ -9,7 +9,7 @@ their own local paths.
 
 Example
 -------
-python examples/simulations/multi_reference/generate_atac_rna.py `
+python analysis_scripts/simulations/multi_reference/generate_atac_rna.py `
   --input-dir path/to/reference_data `
   --rna-file human_melanoma_RNA_f2ab.h5ad `
   --atac-file human_melanoma_ATAC_f2ab.h5ad `

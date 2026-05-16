@@ -1,4 +1,4 @@
-﻿"""Run SMODER on the Mousebrain H3K27ac example dataset.
+"""Run SMODER on the Mousebrain H3K27ac example dataset.
 
 This script is a public example wrapper around the packaged Mousebrain H3K27ac
 pipeline. Large input data files are not included in this repository. Users
@@ -6,7 +6,7 @@ should provide their own local paths to the required .h5ad files.
 
 Example
 -------
-python examples/real_data/run_mousebrain_h3k27ac.py `
+python analysis_scripts/real_data/run_mousebrain_h3k27ac.py `
   --sc-rna path/to/sc_mousebrain_processed.h5ad `
   --st-rna path/to/RNA.h5ad `
   --st-modality2 path/to/peak.h5ad `

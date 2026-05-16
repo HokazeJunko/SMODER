@@ -1,19 +1,19 @@
-﻿"""Generate a paired RNA+ADT simulated spatial multi-omics dataset.
+"""Generate a paired RNA+ATAC simulated spatial multi-omics dataset.
 
-This script uses paired single-cell RNA and ADT reference data to generate
-simulated spatial RNA and ADT data.
+This script uses paired single-cell RNA and ATAC reference data to generate
+simulated spatial RNA and ATAC data.
 
 Large input files are not included in this repository. Users should provide
 their own local paths.
 
 Example
 -------
-python examples/simulations/paired_bimodal/generate_adt_rna.py `
+python analysis_scripts/simulations/paired_bimodal/generate_atac_rna.py `
   --input-dir path/to/reference_data `
-  --rna-file humanBrain_rna_top10_celltypes_f2ab.h5ad `
-  --adt-file humanBrain_adt_top10_celltypes_f2ab.h5ad `
-  --cell-type-col celltype `
-  --output-dir outputs/simulated_adt_rna
+  --rna-file human_melanoma_RNA_f2ab.h5ad `
+  --atac-file human_melanoma_ATAC_f2ab.h5ad `
+  --cell-type-col cell_type `
+  --output-dir outputs/simulated_atac_rna
 """
 
 from __future__ import annotations
@@ -27,27 +27,27 @@ from pathlib import Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate a paired RNA+ADT simulated spatial multi-omics dataset."
+        description="Generate a paired RNA+ATAC simulated spatial multi-omics dataset."
     )
 
     parser.add_argument(
         "--input-dir",
         required=True,
-        help="Directory containing the paired single-cell RNA and ADT reference .h5ad files.",
+        help="Directory containing the paired single-cell RNA and ATAC reference .h5ad files.",
     )
     parser.add_argument(
         "--rna-file",
-        default="humanBrain_rna_top10_celltypes_f2ab.h5ad",
+        default="human_melanoma_RNA_f2ab.h5ad",
         help="RNA reference .h5ad filename inside --input-dir.",
     )
     parser.add_argument(
-        "--adt-file",
-        default="humanBrain_adt_top10_celltypes_f2ab.h5ad",
-        help="ADT reference .h5ad filename inside --input-dir.",
+        "--atac-file",
+        default="human_melanoma_ATAC_f2ab.h5ad",
+        help="ATAC reference .h5ad filename inside --input-dir.",
     )
     parser.add_argument(
         "--cell-type-col",
-        default="celltype",
+        default="cell_type",
         help="Column in .obs that stores cell-type labels.",
     )
     parser.add_argument(
@@ -76,7 +76,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cell-type-number",
         type=int,
-        default=4,
+        default=2,
         help="Number of cell types assigned to each of the 8 regions.",
     )
     parser.add_argument(
@@ -111,15 +111,15 @@ def parse_args() -> argparse.Namespace:
         help="Poisson noise scale for RNA.",
     )
     parser.add_argument(
-        "--adt-poisson-scale",
+        "--atac-poisson-scale",
         type=float,
         default=0.0,
-        help="Poisson noise scale for ADT.",
+        help="Poisson noise scale for ATAC.",
     )
     parser.add_argument(
-        "--enable-adt-noise",
+        "--enable-atac-noise",
         action="store_true",
-        help="Enable spatial gradient Poisson noise for ADT. By default ADT noise is disabled.",
+        help="Enable spatial gradient Poisson noise for ATAC. By default ATAC noise is disabled.",
     )
 
     parser.add_argument(
@@ -162,9 +162,9 @@ def build_noise_config(args: argparse.Namespace) -> dict:
             "zero_protection": True,
             "spatial_gradient_coeff": 3.0,
         },
-        "adt": {
-            "enable_noise": args.enable_adt_noise,
-            "poisson_scale": args.adt_poisson_scale,
+        "atac": {
+            "enable_noise": args.enable_atac_noise,
+            "poisson_scale": args.atac_poisson_scale,
             "zero_protection": True,
             "spatial_gradient_coeff": 3.0,
         },
@@ -205,13 +205,13 @@ def main() -> None:
 
     modality_config = {
         "rna": args.rna_file,
-        "adt": args.adt_file,
+        "atac": args.atac_file,
     }
 
     feature_shuffle_config = build_hvg_shuffle_config(args)
     noise_config = build_noise_config(args)
 
-    print("Loading paired single-cell RNA and ADT reference data...")
+    print("Loading paired single-cell RNA and ATAC reference data...")
     modal_data = {}
     cell_type_hvgs_dict = {}
 
@@ -253,7 +253,7 @@ def main() -> None:
             )
 
     print(f"RNA: {modal_data['rna'].n_obs} cells x {modal_data['rna'].n_vars} features")
-    print(f"ADT: {modal_data['adt'].n_obs} cells x {modal_data['adt'].n_vars} features")
+    print(f"ATAC: {modal_data['atac'].n_obs} cells x {modal_data['atac'].n_vars} features")
 
     mdata = mu.MuData(modal_data)
     print("Reference MuData:", mdata)
@@ -332,16 +332,15 @@ def main() -> None:
     print(f"Saved HVG information: {hvgs_info_file}")
 
     print("=" * 80)
-    print("Paired RNA+ADT spatial simulation finished.")
+    print("Paired RNA+ATAC spatial simulation finished.")
     print(f"Output directory: {output_dir}")
     print(f"Total spots: {simulation_mdata.n_obs}")
     print(f"RNA noise scale: {noise_config['rna']['poisson_scale']}")
-    print(f"ADT noise scale: {noise_config['adt']['poisson_scale']}")
+    print(f"ATAC noise scale: {noise_config['atac']['poisson_scale']}")
     print(f"HVG shuffling enabled: {feature_shuffle_config['enable_shuffle']}")
     print("=" * 80)
 
 
 if __name__ == "__main__":
     main()
-
 

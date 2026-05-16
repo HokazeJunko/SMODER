@@ -1,17 +1,17 @@
-﻿"""Run SMODER on the HBC RNA+ADT real dataset.
+"""Run SMODER on the Mouse embryo RNA+ATAC real dataset.
 
-This script runs SMODER on a real HBC spatial RNA+ADT dataset.
+This script runs SMODER on a real Mouse embryo spatial RNA+ATAC dataset.
 
 Large input files are not included in this repository. Users should provide
 their own local paths.
 
 Example
 -------
-python examples/simulations/paired_bimodal/run_adt_rna.py
-  --sc-rna path/to/HBC/sc.h5ad
-  --st-rna path/to/HBC/HBC_RNA.h5ad
-  --st-adt path/to/HBC/HBC_ADT.h5ad
-  --output-dir outputs/hbc
+python analysis_scripts/simulations/paired_bimodal/run_atac_rna.py
+  --sc-rna path/to/mouse_embryo/mouse_embryo_sc_filtered.h5ad
+  --st-rna path/to/mouse_embryo/MouseEmbryo25um_RNA_updated.h5ad
+  --st-atac path/to/mouse_embryo/MouseEmbryo_peak_ATAC_updated.h5ad
+  --output-dir outputs/mouse_embryo
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from pathlib import Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run SMODER on the HBC RNA+ADT real dataset."
+        description="Run SMODER on the Mouse embryo RNA+ATAC real dataset."
     )
 
     parser.add_argument(
@@ -39,9 +39,9 @@ def parse_args() -> argparse.Namespace:
         help="Path to the spatial RNA .h5ad file.",
     )
     parser.add_argument(
-        "--st-adt",
+        "--st-atac",
         required=True,
-        help="Path to the spatial ADT .h5ad file.",
+        help="Path to the spatial ATAC/peak .h5ad file.",
     )
     parser.add_argument(
         "--output-dir",
@@ -51,20 +51,20 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument(
         "--ref-celltype-col",
-        default="celltype_major",
+        default="cellType",
         help="Column in scRNA obs that stores cell-type labels.",
     )
     parser.add_argument(
         "--sample-id-col",
-        default="sample",
+        default="sampleID",
         help="Column in scRNA obs that stores sample IDs.",
     )
 
     parser.add_argument("--log-fc", type=float, default=1.25)
     parser.add_argument(
-        "--no-top-n-filter",
+        "--top-n-filter",
         action="store_true",
-        help="Disable top-n marker gene filtering. By default, top-n filtering is enabled for HBC.",
+        help="Enable top-n marker gene filtering. By default, top-n filtering is disabled for this example.",
     )
     parser.add_argument("--top-n", type=int, default=200)
     parser.add_argument("--no-select-info-genes", action="store_true")
@@ -81,8 +81,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--hidden-dim", type=int, default=512)
     parser.add_argument("--weight-nb-loss", type=float, default=1.0)
     parser.add_argument("--weight-recon-loss", type=float, default=0.001)
-    parser.add_argument("--weight-consistency", type=float, default=1.0)
-    parser.add_argument("--weight-spatial", type=float, default=0.0001)
+    parser.add_argument("--weight-consistency", type=float, default=0.1)
+    parser.add_argument("--weight-spatial", type=float, default=1e-4)
 
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument(
@@ -122,7 +122,7 @@ def build_base_config(args: argparse.Namespace) -> dict:
     return {
         "sc_rna_path": str(Path(args.sc_rna).expanduser().resolve()),
         "st_rna_path": str(Path(args.st_rna).expanduser().resolve()),
-        "st_adt_path": str(Path(args.st_adt).expanduser().resolve()),
+        "st_adt_path": str(Path(args.st_atac).expanduser().resolve()),
         "output_dir": str(output_dir),
         "model_save_dir": str(model_save_dir),
     }
@@ -135,11 +135,11 @@ def build_params(args: argparse.Namespace) -> dict:
         "ref_celltype_col": args.ref_celltype_col,
         "sample_id_col": args.sample_id_col,
         "log_FC": args.log_fc,
-        "top_n_filter": not args.no_top_n_filter,
+        "top_n_filter": args.top_n_filter,
         "top_n": args.top_n,
         "do_select_info_genes": not args.no_select_info_genes,
         "ct_select": None,
-        "modal2_type": "adt",
+        "modal2_type": "peak",
         "K_spatial": args.k_spatial,
         "K_feature": args.k_feature,
         "pca_n_components_rna": args.pca_n_components_rna,
@@ -177,16 +177,16 @@ def load_data(base_config: dict, params: dict):
         adata_st_rna.var_names_make_unique()
     print(f"  spatial RNA shape: {adata_st_rna.shape}")
 
-    print("Loading spatial ADT...")
-    adata_st_adt = ad.read_h5ad(base_config["st_adt_path"])
-    print(f"  spatial ADT shape: {adata_st_adt.shape}")
+    print("Loading spatial ATAC/peak...")
+    adata_st_atac = ad.read_h5ad(base_config["st_adt_path"])
+    print(f"  spatial ATAC shape: {adata_st_atac.shape}")
 
     all_celltypes = adata_sc.obs[params["ref_celltype_col"]].unique().tolist()
     params["ct_select"] = all_celltypes if params["ct_select"] is None else params["ct_select"]
     print(f"  selected cell types: {len(params['ct_select'])}")
 
     ref_dict = {"modal1": adata_sc}
-    smo_dict = {"modal1": adata_st_rna, "modal2": adata_st_adt}
+    smo_dict = {"modal1": adata_st_rna, "modal2": adata_st_atac}
 
     return ref_dict, smo_dict, params
 
@@ -237,7 +237,7 @@ def init_model_and_preprocess(ref_dict: dict, smo_dict: dict, params: dict):
     print("Preprocessing finished.")
     print(f"  basis matrix shape: {model.ref_adata_dict['basis_matrix'].shape}")
     print(f"  spatial RNA shape after preprocessing: {model.smo_adata_dict['modal1'].shape}")
-    print(f"  spatial ADT shape after preprocessing: {model.smo_adata_dict['modal2'].shape}")
+    print(f"  spatial ATAC shape after preprocessing: {model.smo_adata_dict['modal2'].shape}")
 
     return model
 
@@ -255,7 +255,7 @@ def feature_engineering_and_graph_build(model, params: dict):
     model.feature_engineering_done = True
 
     adata_rna = model.smo_adata_dict["modal1"]
-    adata_adt = model.smo_adata_dict["modal2"]
+    adata_atac = model.smo_adata_dict["modal2"]
 
     print("Constructing spatial graph...")
     model.create_spatialgraph(
@@ -277,10 +277,10 @@ def feature_engineering_and_graph_build(model, params: dict):
     )
 
     dim_rna = adata_rna.obsm[obsm_name_rna].shape[1]
-    dim_modal2 = adata_adt.obsm[obsm_name_modal2].shape[1]
+    dim_modal2 = adata_atac.obsm[obsm_name_modal2].shape[1]
 
     print(f"  RNA feature dimension: {dim_rna}")
-    print(f"  ADT feature dimension: {dim_modal2}")
+    print(f"  ATAC feature dimension: {dim_modal2}")
 
     return model, dim_rna, dim_modal2
 
@@ -314,7 +314,7 @@ def train_model(model, params: dict, base_config: dict):
             dtype=torch.float32,
             device=device,
         )
-        adt_feat = torch.tensor(
+        atac_feat = torch.tensor(
             model.smo_adata_dict["modal2"].obsm[obsm_name_modal2].copy(),
             dtype=torch.float32,
             device=device,
@@ -334,7 +334,7 @@ def train_model(model, params: dict, base_config: dict):
             if params["method"] == 2
             else None
         )
-        adt_feature_graph = (
+        modal2_feature_graph = (
             torch.tensor(
                 model.smo_adata_dict["modal2"].uns["adt"],
                 dtype=torch.long,
@@ -346,13 +346,13 @@ def train_model(model, params: dict, base_config: dict):
 
         if params["method"] == 1:
             rna_encoder = cross_fusion.encode_modal1(spatial_graph, None, rna_feat).cpu().numpy()
-            adt_encoder = cross_fusion.encode_modal2(spatial_graph, None, adt_feat).cpu().numpy()
+            peak_encoder = cross_fusion.encode_modal2(spatial_graph, None, atac_feat).cpu().numpy()
         else:
             rna_encoder = cross_fusion.encode_modal1(spatial_graph, rna_feature_graph, rna_feat).cpu().numpy()
-            adt_encoder = cross_fusion.encode_modal2(spatial_graph, adt_feature_graph, adt_feat).cpu().numpy()
+            peak_encoder = cross_fusion.encode_modal2(spatial_graph, modal2_feature_graph, atac_feat).cpu().numpy()
 
     adata_result.obsm["rna_encoder"] = rna_encoder
-    adata_result.obsm["adt_encoder"] = adt_encoder
+    adata_result.obsm["peak_encoder"] = peak_encoder
 
     return adata_result
 
@@ -398,7 +398,7 @@ def save_results(adata_result, model, params: dict, base_config: dict, dim_rna: 
     adata_to_save = adata_result.copy()
 
     adata_rna = model.smo_adata_dict["modal1"]
-    adata_adt = model.smo_adata_dict["modal2"]
+    adata_atac = model.smo_adata_dict["modal2"]
 
     if "spatial" in adata_rna.obsm:
         adata_to_save.obsm["spatial"] = adata_rna.obsm["spatial"].copy()
@@ -407,21 +407,23 @@ def save_results(adata_result, model, params: dict, base_config: dict, dim_rna: 
     if "X_pca_rna" in adata_rna.obsm:
         adata_to_save.obsm["rna_X_pca"] = adata_rna.obsm["X_pca_rna"].copy()
 
-    if params["obsm_name_modal2"] in adata_adt.obsm:
-        adata_to_save.obsm[f"adt_{params['obsm_name_modal2']}"] = adata_adt.obsm[params["obsm_name_modal2"]].copy()
-    if "X_pca_adt" in adata_adt.obsm:
-        adata_to_save.obsm["adt_X_pca"] = adata_adt.obsm["X_pca_adt"].copy()
+    if params["obsm_name_modal2"] in adata_atac.obsm:
+        adata_to_save.obsm[f"peak_{params['obsm_name_modal2']}"] = adata_atac.obsm[params["obsm_name_modal2"]].copy()
+    if "X_lsi_peak" in adata_atac.obsm:
+        adata_to_save.obsm["peak_X_lsi"] = adata_atac.obsm["X_lsi_peak"].copy()
 
     if "spatial_graph" in adata_rna.uns:
         adata_to_save.uns["spatial_graph"] = adata_rna.uns["spatial_graph"].copy()
     if "rna" in adata_rna.uns:
         adata_to_save.uns["rna_feature_graph"] = adata_rna.uns["rna"].copy()
-    if "adt" in adata_adt.uns:
-        adata_to_save.uns["adt_feature_graph"] = adata_adt.uns["adt"].copy()
+    if "adt" in adata_atac.uns:
+        adata_to_save.uns["peak_feature_graph"] = adata_atac.uns["adt"].copy()
+    if "lsi" in adata_atac.uns:
+        adata_to_save.uns["peak_lsi_params"] = adata_atac.uns["lsi"].copy()
 
     adata_to_save.uns["bimodal_integration_info"] = {
         "modal1_type": "rna",
-        "modal2_type": "adt",
+        "modal2_type": "peak",
         "integration_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "obsm_keys": list(adata_to_save.obsm.keys()),
         "uns_keys": list(adata_to_save.uns.keys()),
@@ -444,18 +446,18 @@ def save_results(adata_result, model, params: dict, base_config: dict, dim_rna: 
 
     log_path = Path(base_config["output_dir"]) / "training_log.txt"
     with open(log_path, "w", encoding="utf-8") as f:
-        f.write("# SMODER HBC RNA+ADT real-data run log\n")
+        f.write("# SMODER Mouse embryo RNA+ATAC real-data run log\n")
         f.write(f"Analysis time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("\n## Input files\n")
         f.write(f"- scRNA reference: {Path(base_config['sc_rna_path']).name}\n")
         f.write(f"- spatial RNA: {Path(base_config['st_rna_path']).name}\n")
-        f.write(f"- spatial ADT: {Path(base_config['st_adt_path']).name}\n")
+        f.write(f"- spatial ATAC: {Path(base_config['st_adt_path']).name}\n")
         f.write("\n## Model parameters\n")
         for key, val in params.items():
             f.write(f"- {key}: {val}\n")
         f.write("\n## Output dimensions\n")
         f.write(f"- RNA feature dimension: {dim_rna}\n")
-        f.write(f"- ADT feature dimension: {dim_modal2}\n")
+        f.write(f"- ATAC feature dimension: {dim_modal2}\n")
         f.write(f"- number of spots: {adata_to_save.n_obs}\n")
         f.write(f"- number of cell types: {len(cell_type_names)}\n")
 
@@ -471,10 +473,10 @@ def main() -> None:
     base_config = build_base_config(args)
     params = build_params(args)
 
-    print("Running SMODER on the HBC RNA+ADT real dataset")
+    print("Running SMODER on the Mouse embryo RNA+ATAC real dataset")
     print(f"scRNA reference: {base_config['sc_rna_path']}")
     print(f"spatial RNA:     {base_config['st_rna_path']}")
-    print(f"spatial ADT:     {base_config['st_adt_path']}")
+    print(f"spatial ATAC:    {base_config['st_adt_path']}")
     print(f"output dir:      {base_config['output_dir']}")
     print(f"device:          {params['device']}")
 
@@ -484,12 +486,10 @@ def main() -> None:
     adata_result = train_model(model, params, base_config)
     save_results(adata_result, model, params, base_config, dim_rna, dim_modal2)
 
-    print("SMODER HBC RNA+ADT run finished successfully.")
+    print("SMODER Mouse embryo RNA+ATAC run finished successfully.")
 
 
 if __name__ == "__main__":
     main()
-
-
 
 
